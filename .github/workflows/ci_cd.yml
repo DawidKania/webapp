@@ -11,7 +11,7 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v2
     - name: Set up Java
-      uses: actions/seup-java@v2
+      uses: actions/setup-java@v2
       with:
         java-version: '17'
     - name: Build with Maven
