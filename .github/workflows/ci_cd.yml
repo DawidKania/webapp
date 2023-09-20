@@ -8,34 +8,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-	  - name: Checkout source code
-  	    uses: actions/checkout@v2
-
-	  - name: Set up Java
-        uses: actions/seup-java@v2
-        with:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+    - name: Set up Java
+      uses: actions/seup-java@v2
+      with:
         java-version: '17'
+	  
+    - name: Build with Maven
+      run: |
+        mvn clean package
+	  
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: webapp
+        path: target/webapp-0.01-snapshot.jar
 
-      - name: Build with Maven
-        run: |
-          mvn clean package
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: webapp
-          path: target/webapp-0.01-snapshot.jar
-
-	  - name: Azure Container Registry Login
-        uses: Azure/docker-login@v1
-        with:
-          login-server: ${{ env.ACR_name }}.azurecr.io
-	      username: ${{ env.ACR_name }}
-	      password: ${{ secrets.password }}
-
-      - name: Build and Push Docker Image
-        run: |
-      docker build -t ${{ env.ACR_name }}.azurecr.io/webapp:latest .
-      docker tag ${{ env.ACR_name }}.azurecr.io/webapp:latest ${{ env.ACR_name }}.azurecr.io/webapp:${{ github.sha }}
-      docker push ${{ env.ACR_name }}.azurecr.io/webapp:latest
-      docker push ${{ env.ACR_name }}.azurecr.io/webapp:${{ github.sha }}
+    - name: Azure Container Registry Login
+      uses: Azure/docker-login@v1
+      with:
+        login-server: ${{ env.ACR_name }}.azurecr.io
+        username: ${{ env.ACR_name }}
+        password: ${{ secrets.password }}
+       
+    - name: Build and Push Docker Image
+      run: |
+       docker build -t ${{ env.ACR_name }}.azurecr.io/webapp:latest .
+       docker tag ${{ env.ACR_name }}.azurecr.io/webapp:latest ${{ env.ACR_name }}.azurecr.io/webapp:${{ github.sha }}
+       docker push ${{ env.ACR_name }}.azurecr.io/webapp:latest
+       docker push ${{ env.ACR_name }}.azurecr.io/webapp:${{ github.sha }}
