@@ -14,11 +14,11 @@ jobs:
       uses: actions/seup-java@v2
       with:
         java-version: '17'
-	  
+	
     - name: Build with Maven
       run: |
         mvn clean package
-	  
+	
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -31,7 +31,7 @@ jobs:
         login-server: ${{ env.ACR_name }}.azurecr.io
         username: ${{ env.ACR_name }}
         password: ${{ secrets.password }}
-       
+	
     - name: Build and Push Docker Image
       run: |
        docker build -t ${{ env.ACR_name }}.azurecr.io/webapp:latest .
