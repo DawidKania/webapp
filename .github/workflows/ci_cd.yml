@@ -26,12 +26,12 @@ jobs:
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
       with:
-        login-server: ${{ env.ACR_name }}.azurecr.io
-        username: ${{ env.ACR_name }}
-        password: ${{ secrets.password }}
+        login-server: ${{ secrets.ACR_NAME }}.azurecr.io
+        username: ${{ secrets.ACR_NAME }}
+        password: ${{ secrets.WEBAPPSECRET }}
     - name: Build and Push Docker Image
       run: |
-       docker build -t ${{ env.ACR_name }}.azurecr.io/webapp:latest .
-       docker tag ${{ env.ACR_name }}.azurecr.io/webapp:latest ${{ env.ACR_name }}.azurecr.io/webapp:${{ github.sha }}
-       docker push ${{ env.ACR_name }}.azurecr.io/webapp:latest
-       docker push ${{ env.ACR_name }}.azurecr.io/webapp:${{ github.sha }}
+       docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest .
+       docker tag ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest ${{ secrets.ACR_NAME }}.azurecr.io/webapp:${{ github.sha }}
+       docker push ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest
+       docker push ${{ secrets.ACR_NAME }}.azurecr.io/webapp:${{ github.sha }}
